@@ -4,6 +4,8 @@ import rospy
 from clover import srv
 from std_srvs.srv import Trigger
 import sys 
+from geopy import distance
+import math
 
 def movepos(ini,fin):
 
@@ -18,25 +20,37 @@ def movepos(ini,fin):
     set_rates = rospy.ServiceProxy('set_rates', srv.SetRates)
     land = rospy.ServiceProxy('land', Trigger)
 
-    # Takeoff and hover 1 m above the ground
-    navigate(x=0, y=0, z=1, frame_id='body', auto_arm=True)
-
-    # Wait for 3 seconds
-    rospy.sleep(3)
-
-    # Fly forward 1 m
-    navigate(x=n, y=0, z=0, frame_id='body')
-
-    # Wait for 3 seconds
-    rospy.sleep(3)
-
-    # Perform landing
-    land()
+    if not math.isnan(get_telemetry().lat):
+        dp=(get_telemetry().lat,get_telemetry().lon)
+        if int(distance.distance(dp,ini)) <5:
+            # Takeoff and hover 1 m above the ground
+            navigate(x=0, y=0, z=1, frame_id='body', auto_arm=True)
+            # Wait for 3 seconds
+            rospy.sleep(2)
+            # Fly forward to A point
+            navigate_global(lat=ini[0], lon=ini[1], z=0, speed=5, frame_id='body')
+            # Wait for 3 seconds
+            rospy.sleep(2)
+            #fly to point B
+            navigate_global(lat=fin[0], lon=fin[1], z=0, speed=5, frame_id='body')
+            #wait
+            rospy.sleep(2)
+            # Perform landing
+            land()
+        else:
+            print("Move drone closer to A point and try again!!")
+    else:
+        print("GPS unavailable!! Try again once GPS is available!!")
 
 if __name__=="__main__":
-    if len(sys.argv) is 3 :
-        movepos(sys.argv[1],sys.argv[2])
-        print("Moving forward ",sys.argv[1]," meters")
+    if len(sys.argv) is 5 :
+        a=(sys.argv[1],sys.argv[2])
+        b=(sys.argv[3],sys.argv[4])
+        d=int(distance.distance(a,b).m)
+        if d<10:
+            print("Moving from point A to point B ")
+            movepos(a,b)
+        else:
+            print("Distance more than 10m")
     else:    
-        movepos()
-        print("Moving forward 1 meter")
+        print("required parameters not provided")
