@@ -44,8 +44,8 @@ def movepos(ini,fin):
 
 if __name__=="__main__":
     if len(sys.argv) is 5 :
-        a=(sys.argv[1],sys.argv[2])
-        b=(sys.argv[3],sys.argv[4])
+        a=(float(sys.argv[1]),float(sys.argv[2]))
+        b=(float(sys.argv[3]),float(sys.argv[4]))
         d=int(distance.distance(a,b).m)
         if d<10:
             print("Moving from point A to point B ")
