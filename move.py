@@ -26,11 +26,11 @@ def movepos(ini,fin):
             # Takeoff and hover 1 m above the ground
             navigate(x=0, y=0, z=1, frame_id='body', auto_arm=True)
             # Wait for 3 seconds
-            rospy.sleep(2)
+            rospy.sleep(5)
             # Fly forward to A point
             navigate_global(lat=ini[0], lon=ini[1], z=0, speed=5, frame_id='body')
             # Wait for 3 seconds
-            rospy.sleep(2)
+            rospy.sleep(3)
             #fly to point B
             navigate_global(lat=fin[0], lon=fin[1], z=0, speed=5, frame_id='body')
             #wait
