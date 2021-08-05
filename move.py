@@ -25,18 +25,22 @@ def movepos(ini,fin):
         if int(distance.distance(dp,ini).m) <5:
             # Takeoff and hover 1 m above the ground
             navigate(x=0, y=0, z=1, frame_id='body', auto_arm=True)
+            print("Takeoff complete")
             # Wait for 3 seconds
             rospy.sleep(5)
             # Fly forward to A point
-            navigate_global(lat=ini[0], lon=ini[1], z=0, speed=5, frame_id='body')
+            navigate_global(lat=ini[0], lon=ini[1], z=0, speed=0.5, frame_id='body')
+            print("Reached point A")
             # Wait for 3 seconds
             rospy.sleep(3)
             #fly to point B
-            navigate_global(lat=fin[0], lon=fin[1], z=0, speed=5, frame_id='body')
+            navigate_global(lat=fin[0], lon=fin[1], z=0, speed=0.5, frame_id='body')
+            print("Reached point B")
             #wait
             rospy.sleep(2)
             # Perform landing
             land()
+            print("land completed")
         else:
             print("Move drone closer to A point and try again!!")
     else:
