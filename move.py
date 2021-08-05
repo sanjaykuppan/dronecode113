@@ -22,7 +22,7 @@ def movepos(ini,fin):
 
     if not math.isnan(get_telemetry().lat):
         dp=(get_telemetry().lat,get_telemetry().lon)
-        if int(distance.distance(dp,ini)) <5:
+        if int(distance.distance(dp,ini).m) <5:
             # Takeoff and hover 1 m above the ground
             navigate(x=0, y=0, z=1, frame_id='body', auto_arm=True)
             # Wait for 3 seconds
